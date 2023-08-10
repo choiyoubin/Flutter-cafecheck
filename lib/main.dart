@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: FirstScreen(),
     );
   }
 }
@@ -52,6 +52,150 @@ class MyHomePage extends StatefulWidget {
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class FirstScreen extends StatefulWidget {
+  @override
+  _FirstScreenState createState() => _FirstScreenState();
+}
+
+class _FirstScreenState extends State<FirstScreen> {
+  String selectedCategory = '거리 순';
+  int numberOfTables = 5; // 테이블 개수
+
+  @override
+  Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double tableHeight = screenHeight / numberOfTables;
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Cafe Search'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              showSearch(context: context, delegate: SearchBarDelegate());
+            }
+          )
+        ]
+        ),
+      body: Padding(
+        padding: EdgeInsets.only(top: 10, left: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+            DropdownButton<String>(
+              value: selectedCategory,
+              onChanged: (newValue) {
+                setState( () {
+                  selectedCategory = newValue!;
+                });
+              },
+              items: <String>['거리 순', '혼잡도 순', '별점 순']
+                .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+              }).toList(),
+            ),
+            ],
+            ),
+            SizedBox(height: 20),
+            Expanded(
+              child: ListView.builder(
+                itemCount: numberOfTables,
+                itemBuilder: (BuildContext context, int index) {
+                  return SizedBox(
+                    height: tableHeight,
+                    child: DataTable(
+                      columns: <DataColumn>[
+                        DataColumn(label: Text('Header 1')),
+                        DataColumn(label: Text('Header 2')),
+                      ],
+                      rows: <DataRow>[
+                        DataRow(cells: <DataCell>[
+                          DataCell(Text('Item ${index + 1}')),
+                          DataCell(Text('Value ${index + 1}')),
+                        ]),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+// leading: DropdownButton<String>(
+// value: selectedCategory,
+// onChanged: (newValue) {
+// setState(() {
+// selectedCategory = newValue!;
+// });
+// },
+// items: <String>['거리 순', '별점 순', '혼잡도 순']
+//     .map<DropdownMenuItem<String>>((String value) {
+// return DropdownMenuItem<String>(
+// value: value,
+// child: Text(value),
+// );
+// }).toList(),
+// ),
+class SearchBarDelegate extends SearchDelegate<String> {
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: Icon(Icons.clear),
+        onPressed: () {
+          query = '';
+        },
+      ),
+    ];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.arrow_back),
+      onPressed: () {
+        close(context, '');
+      },
+    );
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return Center(
+      child: Text('Search Results for "$query"'),
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return Center(
+      child: Text('Search Suggestions for "$query"'),
+    );
+  }
+}
+class SecondScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Second Screen'),
+      ),
+      body: Center(
+        child: Text('Welcome to the Second Screen!'),
+      ),
+    );
+  }
 }
 
 class _MyHomePageState extends State<MyHomePage> {
