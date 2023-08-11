@@ -221,9 +221,7 @@ class DetailScreen extends StatelessWidget {
         body: TabBarView(
           children: [
             // 메뉴 페이지
-            Center(
-              child: Text('메뉴 페이지 내용'),
-            ),
+            MenuPage(),
             // 좌석배치도 페이지
             Center(
               child: Text('좌석배치도 페이지 내용'),
@@ -231,6 +229,80 @@ class DetailScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class MenuPage extends StatefulWidget {
+  @override
+  _MenuPageState createState() => _MenuPageState();
+}
+
+class _MenuPageState extends State<MenuPage> {
+  String selectedCategory = 'Category 1'; // 초기 선택값
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          children: [
+
+            SizedBox(width: 10),
+            DropdownButton<String>(
+              value: selectedCategory,
+              onChanged: (newValue) {
+                setState(() {
+                  selectedCategory = newValue!;
+                });
+              },
+              items: <String>['Category 1', 'Category 2', 'Category 3']
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            ),
+          ],
+        ),
+        SizedBox(height: 20),
+        // 선택한 카테고리에 따라 다른 페이지 표시
+        if (selectedCategory == 'Category 1') ...[
+          MenuCategory1(),
+        ] else if (selectedCategory == 'Category 2') ...[
+          MenuCategory2(),
+        ] else if (selectedCategory == 'Category 3') ...[
+          MenuCategory3(),
+        ],
+      ],
+    );
+  }
+}
+
+class MenuCategory1 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text('메뉴 카테고리 1 페이지 내용'),
+    );
+  }
+}
+
+class MenuCategory2 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text('메뉴 카테고리 2 페이지 내용'),
+    );
+  }
+}
+
+class MenuCategory3 extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text('메뉴 카테고리 3 페이지 내용'),
     );
   }
 }
