@@ -110,21 +110,113 @@ class _FirstScreenState extends State<FirstScreen> {
                 itemBuilder: (BuildContext context, int index) {
                   return SizedBox(
                     height: tableHeight,
-                    child: DataTable(
-                      columns: <DataColumn>[
-                        DataColumn(label: Text('Header 1')),
-                        DataColumn(label: Text('Header 2')),
-                      ],
-                      rows: <DataRow>[
-                        DataRow(cells: <DataCell>[
-                          DataCell(Text('Item ${index + 1}')),
-                          DataCell(Text('Value ${index + 1}')),
-                        ]),
-                      ],
+                    child: GestureDetector(
+                      onTap: () {
+                        // 각 테이블을 클릭하면 해당 페이지로 이동하면서 선택한 테이블의 title도 전달
+                        navigateToDetailPage(context, selectedCategory, index);
+                      },
+                      child: buildTable(selectedCategory, index),
                     ),
                   );
                 },
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void navigateToDetailPage(BuildContext context, String category, int index) {
+    String title = '';
+    if (category == '거리 순') {
+      title = '거리 순 ${index + 1}';
+    } else if (category == '혼잡도 순') {
+      title = '혼잡도 순 ${index + 1}';
+    } else if (category == '별점 순') {
+      title = '별점 순 ${index + 1}';
+    }
+
+    // 각 테이블을 클릭하면 해당 페이지로 이동하는 함수
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DetailScreen(title: title),
+      ),
+    );
+  }
+
+  Widget buildTable(String category, int index) {
+    String title = '';
+    String description = '';
+    String imagePath = 'assets/profile_image.png';
+
+    if (category == '거리 순') {
+      title = '거리 순 ${index + 1}';
+      description = '거리 순 카페 ${index + 1}';
+    } else if (category == '혼잡도 순') {
+      title = '혼잡도 순 ${index + 1}';
+      description = '혼잡도 순 카페 ${index + 1}';
+    } else if (category == '별점 순') {
+      title = '별점 순 ${index + 1}';
+      description = '별점 순 카페 ${index + 1}';
+    }
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            CircleAvatar(
+              backgroundImage: AssetImage(imagePath),
+              radius: 40,
+            ),
+            SizedBox(width: 20),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  description,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class DetailScreen extends StatelessWidget {
+  final String title;
+
+  DetailScreen({required this.title});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title), // 선택한 테이블의 title로 변경
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Detail Page Content for $title',
+              style: TextStyle(fontSize: 20),
             ),
           ],
         ),
