@@ -206,17 +206,27 @@ class DetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title), // 선택한 테이블의 title로 변경
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+    return DefaultTabController(
+      length: 2, // TabBar의 탭 개수
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(title), // 선택한 테이블의 title로 변경
+          bottom: TabBar(
+            tabs: [
+              Tab(text: '메뉴'),
+              Tab(text: '좌석배치도'),
+            ],
+          ),
+        ),
+        body: TabBarView(
           children: [
-            Text(
-              'Detail Page Content for $title',
-              style: TextStyle(fontSize: 20),
+            // 메뉴 페이지
+            Center(
+              child: Text('메뉴 페이지 내용'),
+            ),
+            // 좌석배치도 페이지
+            Center(
+              child: Text('좌석배치도 페이지 내용'),
             ),
           ],
         ),
